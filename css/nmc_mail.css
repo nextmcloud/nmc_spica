@@ -1,0 +1,9 @@
+.nmc_mail_wrapper {
+	display: flex;
+	align-items: center;
+	color: var(--color-primary-text);
+}
+
+.nmc_mail_wrapper .icon-mail {
+	padding: 12px;
+}

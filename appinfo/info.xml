@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<info xmlns:xsi= "http://www.w3.org/2001/XMLSchema-instance"
+	  xsi:noNamespaceSchemaLocation="https://apps.nextcloud.com/schema/apps/info.xsd">
+	<id>nmc_mail</id>
+	<name>NextMagentaCloud Mail integration</name>
+	<summary>Utility app for frontend integration with mail</summary>
+	<description>This utility app supports Magentacloud mail status in the front end</description>
+	<version>0.1.0</version>
+	<licence>agpl</licence>
+	<author>Julius Härtl</author>
+	<namespace>NmcMail</namespace>
+	<category>integration</category>
+	<category>social</category>
+	<website>https://github.com/nextmcloud/nmc_user</website>
+	<bugs>https://github.com/nextmcloud/nmc_user/issues</bugs>
+	<repository>https://github.com/nextmcloud/nmc_user/nmcloud_oidc</repository>
+	<dependencies>
+		<nextcloud min-version="21" max-version="23"/>
+	</dependencies>
+</info>
