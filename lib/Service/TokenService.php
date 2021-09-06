@@ -58,6 +58,10 @@ class TokenService {
 		}
 
 		$token = new Token(json_decode($sessionData, true, 512, JSON_THROW_ON_ERROR));
+		if ($token->isExpired()) {
+			return $token;
+		}
+
 		if ($refresh && $token->isExpiring()) {
 			$token = $this->refresh($token);
 		}
@@ -70,27 +74,27 @@ class TokenService {
 		$oidcProvider = $providerMapper->getProvider($token->getProviderId());
 		$discovery = $this->obtainDiscovery($oidcProvider->getDiscoveryEndpoint());
 
-		$result = $this->client->post(
-			$discovery['token_endpoint'],
-			[
-				'body' => [
-					'client_id' => $oidcProvider->getClientId(),
-					'client_secret' => $oidcProvider->getClientSecret(),
-					'grant_type' => 'refresh_token',
-					'refresh_token' => $token->getRefreshToken(),
-					'scope' => 'spica',
-				],
-			]
-		);
 		try {
+			$result = $this->client->post(
+				$discovery['token_endpoint'],
+				[
+					'body' => [
+						'client_id' => $oidcProvider->getClientId(),
+						'client_secret' => $oidcProvider->getClientSecret(),
+						'grant_type' => 'refresh_token',
+						'refresh_token' => $token->getRefreshToken(),
+						'scope' => 'spica',
+					],
+				]
+			);
 			return $this->storeToken(
 				array_merge(
 					json_decode($result->getBody(), true, 512, JSON_THROW_ON_ERROR),
 					['provider_id' => $token->getProviderId()],
 				)
 			);
-		} catch (\JsonException $e) {
-			// Failed to refresh
+		} catch (\Exception $e) {
+			// Failed to refresh, return old token which will be retried or otherwise timeout if expired
 			return $token;
 		}
 	}

@@ -45,7 +45,7 @@ class PageController extends Controller {
 	 */
 	public function index() {
 		return new JSONResponse([
-			'token' => \OC::$server->get(TokenService::class)->getToken(false)
+			'token' => \OC::$server->get(TokenService::class)->getToken(true)
 		]);
 	}
 
