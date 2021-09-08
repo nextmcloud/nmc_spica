@@ -63,15 +63,14 @@ class SpicaMailService extends SpicaBaseService {
 		}
 
 		$cachedUnreadCount = $this->cache->get($this->userId);
-		if ($cachedUnreadCount) {
+		if ($cachedUnreadCount !== null) {
 			return;
 		}
-
 
 		$unreadUrl = $this->getSpicaBaseUrl('/rest/messaging/v1/emails/inbox/unread/count');
 		try {
 			$client = $this->clientService->newClient();
-			$response = $client->get($unreadUrl, $this->getSpicaOptions());
+			$response = $client->get($unreadUrl, array_merge($this->getSpicaOptions(), [ 'timeout' => 5 ]));
 			$responseBody = $response->getBody();
 			$result = json_decode($responseBody, true, 512, JSON_THROW_ON_ERROR);
 			if (!isset($result['count'])) {

@@ -76,7 +76,7 @@ class SpicaBaseService {
 			'headers' => [
 				'X-UserToken' => $spicaToken,
 			],
-			'auth' => [ $this->spicaAppId, $this->spicaAppSecret ]
+			'auth' => [ $this->spicaAppId, $this->spicaAppSecret ],
 		];
 	}
 }
