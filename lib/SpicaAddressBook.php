@@ -22,10 +22,10 @@ declare(strict_types=1);
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-namespace OCA\IntegrationSpica;
+namespace OCA\NmcMail;
 
-use OCA\IntegrationSpica\Exception\ServiceException;
-use OCA\IntegrationSpica\Service\SpicaContactsService;
+use OCA\NmcMail\Exception\ServiceException;
+use OCA\NmcMail\Service\SpicaContactsService;
 use OCP\IAddressBook;
 use OCP\ICache;
 
@@ -82,23 +82,23 @@ class SpicaAddressBook implements IAddressBook {
 //		}
 		try {
 			$result = $this->spicaContactsService->search($pattern, $options);
-		} catch(ServiceException $e) {
+		} catch (ServiceException $e) {
 			return [];
 		}
 
-		$contacts = $result['contacts'];
-		if(empty($contacts)) {
+		$contacts = $result['contacts'] ?? null;
+		if (empty($contacts)) {
 			return [];
 		}
 		// form the result set
 		$result = array_merge(...array_map(static function ($contact) {
 			$emails = $contact['emails'] ?? [];
 			$template = ['FN' => ($contact['first'] ?? '') . ' ' . ($contact['last'] ?? '') ];
-			if(empty($emails)) {
+			if (empty($emails)) {
 				return [array_merge($template, ['EMAIL' => ''])];
 			}
 			return array_map(static function ($email) use ($template) {
-				return array_merge( $template, ['EMAIL' => $email['email']]);
+				return array_merge($template, ['EMAIL' => $email['email']]);
 			}, $emails);
 		}, $contacts));
 

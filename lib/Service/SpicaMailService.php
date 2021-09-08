@@ -26,7 +26,6 @@ declare(strict_types=1);
 
 namespace OCA\NmcMail\Service;
 
-
 use Exception;
 use OCA\NmcMail\AppInfo\Application;
 use OCP\Http\Client\IClientService;
@@ -35,16 +34,13 @@ use OCP\ICacheFactory;
 use OCP\IConfig;
 use Psr\Log\LoggerInterface;
 
-class UnreadService {
-
+class SpicaMailService extends SpicaBaseService {
 	private const UNREAD_CACHE_TTL = 60;
 
 	/** @var IConfig */
 	private $config;
 	/** @var IClientService */
 	private $clientService;
-	/** @var TokenService */
-	private $tokenService;
 	/** @var LoggerInterface */
 	private $logger;
 	/** @var ICache */
@@ -52,44 +48,17 @@ class UnreadService {
 	/** @var string|null */
 	private $userId;
 
-	/** @var string */
-	private $spicaBaseUrl;
-	/** @var string */
-	private $spicaAppId;
-	/** @var string */
-	private $spicaAppSecret;
-
 	public function __construct(IConfig $config, IClientService $clientService, LoggerInterface $logger, TokenService $tokenService, ICacheFactory $cacheFactory, $userId) {
+		parent::__construct($config, $tokenService, $userId);
 		$this->config = $config;
 		$this->clientService = $clientService;
 		$this->logger = $logger;
-		$this->tokenService = $tokenService;
 		$this->cache = $cacheFactory->createDistributed(Application::APP_ID . '_unread');
 		$this->userId = $userId;
-
-		if ($userId === null) {
-			return;
-		}
-
-		$this->spicaBaseUrl = $this->config->getAppValue(Application::APP_ID, Application::APP_CONFIG_SPICA_URL);
-		$this->spicaAppId = $this->config->getAppValue(Application::APP_ID, Application::APP_CONFIG_SPICA_APPID);
-		$this->spicaAppSecret = $this->config->getAppValue(Application::APP_ID, Application::APP_CONFIG_SPICA_APPSECRET);
-	}
-
-	public function checkSetup(): bool {
-		return $this->userId !== null && $this->spicaBaseUrl !== '' && $this->spicaAppId !== '' && $this->spicaAppSecret !== '';
 	}
 
 	public function fetchUnreadCounter(): void {
 		if (!$this->checkSetup()) {
-			return;
-		}
-
-		$spicaDebugUserToken = $this->config->getAppValue(Application::APP_ID, 'spica-usertoken');
-
-		$oidcToken = $this->tokenService->getToken();
-		if (!$oidcToken && $spicaDebugUserToken === '') {
-			$this->logger->debug('Attempt to fetch unread count but could not find SPICA token');
 			return;
 		}
 
@@ -98,17 +67,11 @@ class UnreadService {
 			return;
 		}
 
-		$spicaToken = $spicaDebugUserToken !== '' ? $spicaDebugUserToken : $oidcToken->getAccessToken();
 
-		$unreadUrl = $this->spicaBaseUrl . '/rest/messaging/v1/emails/inbox/unread/count';
+		$unreadUrl = $this->getSpicaBaseUrl('/rest/messaging/v1/emails/inbox/unread/count');
 		try {
 			$client = $this->clientService->newClient();
-			$response = $client->get($unreadUrl, [
-				'headers' => [
-					'X-UserToken' => $spicaToken,
-				],
-				'auth' => [ $this->spicaAppId, $this->spicaAppSecret ]
-			]);
+			$response = $client->get($unreadUrl, $this->getSpicaOptions());
 			$responseBody = $response->getBody();
 			$result = json_decode($responseBody, true, 512, JSON_THROW_ON_ERROR);
 			if (!isset($result['count'])) {
@@ -133,5 +96,4 @@ class UnreadService {
 		$this->cache->set($this->userId, $counter, self::UNREAD_CACHE_TTL);
 		$this->config->setUserValue($this->userId, Application::APP_ID, Application::USER_CONFIG_KEY_UNREAD_COUNT, (string)$counter);
 	}
-
 }

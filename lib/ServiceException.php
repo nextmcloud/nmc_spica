@@ -21,33 +21,9 @@
  *
  */
 
-declare(strict_types=1);
+namespace OCA\NmcMail\Exception;
 
+use Exception;
 
-namespace OCA\NmcMail\Controller;
-
-use OCA\NmcMail\Model\Token;
-use OCA\NmcMail\Service\TokenService;
-use OCP\AppFramework\Controller;
-use OCP\AppFramework\Http\JSONResponse;
-use OCP\IRequest;
-
-class PageController extends Controller {
-	public function __construct($appName, IRequest $request) {
-		parent::__construct($appName, $request);
-	}
-
-	/**
-	 * @PublicPage
-	 * @NoCSRFRequired
-	 * @UseSession
-	 */
-	public function index() {
-		/** @var Token $token */
-		$token = \OC::$server->get(TokenService::class)->getToken(true);
-		return new JSONResponse([
-			'token' => $token,
-			'expires_in_seconds' => ($token->getCreatedAt() + $token->getExpiresIn()) - time()
-		]);
-	}
+class ServiceException extends Exception {
 }

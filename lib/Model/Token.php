@@ -80,6 +80,10 @@ class Token implements JsonSerializable {
 		return time() > ($this->createdAt + (int)($this->expiresIn / 2));
 	}
 
+	public function getCreatedAt() {
+		return $this->createdAt;
+	}
+
 	public function jsonSerialize(): array {
 		return [
 			'id_token' => $this->idToken,

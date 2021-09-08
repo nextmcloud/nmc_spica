@@ -29,20 +29,30 @@ use OCA\NmcMail\Model\Token;
 use OCA\UserOIDC\Db\ProviderMapper;
 use OCP\Http\Client\IClient;
 use OCP\Http\Client\IClientService;
+use OCP\IRequest;
 use OCP\ISession;
+use OCP\IURLGenerator;
+use OCP\IUserSession;
 
 class TokenService {
-
 	private const SESSION_TOKEN_KEY = 'nmcuser-token';
 
 	/** @var ISession */
 	private $session;
 	/** @var IClient */
 	private $client;
+	/** @var IURLGenerator */
+	private $urlGenerator;
+	/** @var IUserSession */
+	private $userSession;
+	/** @var IRequest */
+	private $request;
 
-	public function __construct(ISession $session, IClientService $client) {
+	public function __construct(ISession $session, IClientService $client, IURLGenerator $urlGenerator, IUserSession $userSession, IRequest $request) {
 		$this->session = $session;
 		$this->client = $client->newClient();
+		$this->urlGenerator = $urlGenerator;
+		$this->userSession = $userSession;
 	}
 
 	public function storeToken(array $tokenData): Token {
@@ -104,4 +114,17 @@ class TokenService {
 		return json_decode($response->getBody(), true);
 	}
 
+	public function reauthenticate() {
+		$token = $this->getToken(false);
+		if ($token === null) {
+			return;
+		}
+
+		// Logout the user and redirect to the oidc login flow to gather a fresh token
+		$this->userSession->logout();
+		$redirectUrl = $this->urlGenerator->getAbsoluteURL('/index.php/apps/user_oidc/login/'  . $token->getProviderId()) .
+			'?redirectUrl=' . urlencode($this->request->getRequestUri());
+		header('Location: ' . $redirectUrl);
+		exit();
+	}
 }

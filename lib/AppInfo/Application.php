@@ -27,13 +27,15 @@ namespace OCA\NmcMail\AppInfo;
 
 use OCA\NmcMail\Listener\TokenObtainedEventListener;
 use OCA\NmcMail\Service\TokenService;
-use OCA\NmcMail\Service\UnreadService;
+use OCA\NmcMail\Service\SpicaMailService;
+use OCA\NmcMail\SpicaAddressBook;
 use OCA\UserOIDC\Event\TokenObtainedEvent;
 use OCP\AppFramework\App;
 use OCP\AppFramework\Bootstrap\IBootContext;
 use OCP\AppFramework\Bootstrap\IBootstrap;
 use OCP\AppFramework\Bootstrap\IRegistrationContext;
 use OCP\AppFramework\Services\IInitialState;
+use OCP\Contacts\IManager;
 use OCP\IConfig;
 use OCP\IL10N;
 use OCP\INavigationManager;
@@ -41,14 +43,13 @@ use OCP\IURLGenerator;
 use OCP\Util;
 
 class Application extends App implements IBootstrap {
-
 	public const APP_ID = 'nmc_mail';
 
 	public const USER_CONFIG_KEY_UNREAD_COUNT = 'unread-count';
 
 	public const APP_CONFIG_WEBMAIL_URL = 'webmail-url';
 	public const APP_CONFIG_SPICA_URL = 'spica-baseurl';
-	public const APP_CONFIG_SPICA_APPID= 'spica-appid';
+	public const APP_CONFIG_SPICA_APPID = 'spica-appid';
 	public const APP_CONFIG_SPICA_APPSECRET = 'spica-appsecret';
 
 	public function __construct() {
@@ -57,7 +58,6 @@ class Application extends App implements IBootstrap {
 
 	public function register(IRegistrationContext $context): void {
 		$context->registerEventListener(TokenObtainedEvent::class, TokenObtainedEventListener::class);
-
 	}
 
 	public function boot(IBootContext $context): void {
@@ -65,21 +65,25 @@ class Application extends App implements IBootstrap {
 			IInitialState $initialState,
 			TokenService $tokenService,
 			INavigationManager $navigationManager,
+			IManager $contactsManager,
+			SpicaAddressBook $spicaAddressBook,
 			IL10N $l10n,
-			UnreadService $unreadService,
+			SpicaMailService $unreadService,
 			IURLGenerator $urlGenerator,
 			IConfig $config,
 			$userId
 		) {
-			if ($userId) {
-				$token = $tokenService->getToken();
-				// TODO only for apge requests probably in middleware otherwise there would be a onetime failure if a api request hits this
-				// and it gets autoredirected to the idp for reauth
-				if ($token !== null && $token->isExpired()) {
-					\OC::$server->getUserSession()->logout();
-					header('Location: https://nextcloud.local.dev.bitgrid.net/index.php/apps/user_oidc/login/1?redirectUrl=' . urlencode(\OC::$server->getRequest()->getRequestUri()));
-					exit();
-				}
+			if (!$userId) {
+				return;
+			}
+
+			$contactsManager->registerAddressBook($spicaAddressBook);
+			$token = $tokenService->getToken();
+
+			// TODO only for apge requests probably in middleware otherwise there would be a onetime failure if a api request hits this
+			// and it gets autoredirected to the idp for reauth
+			if ($token !== null && $token->isExpired()) {
+				$tokenService->reauthenticate();
 			}
 
 			$unreadCounter = $unreadService->getUnreadCounter();
