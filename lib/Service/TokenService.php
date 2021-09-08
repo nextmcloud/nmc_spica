@@ -23,9 +23,9 @@
 
 declare(strict_types=1);
 
-namespace OCA\NmcMail\Service;
+namespace OCA\NmcSpica\Service;
 
-use OCA\NmcMail\Model\Token;
+use OCA\NmcSpica\Model\Token;
 use OCA\UserOIDC\Db\ProviderMapper;
 use OCP\Http\Client\IClient;
 use OCP\Http\Client\IClientService;

@@ -23,9 +23,9 @@
 
 declare(strict_types=1);
 
-namespace OCA\NmcMail\Listener;
+namespace OCA\NmcSpica\Listener;
 
-use OCA\NmcMail\Service\TokenService;
+use OCA\NmcSpica\Service\TokenService;
 use OCA\UserOIDC\Event\TokenObtainedEvent;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;

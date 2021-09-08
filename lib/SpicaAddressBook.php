@@ -22,10 +22,10 @@ declare(strict_types=1);
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-namespace OCA\NmcMail;
+namespace OCA\NmcSpica;
 
-use OCA\NmcMail\Exception\ServiceException;
-use OCA\NmcMail\Service\SpicaContactsService;
+use OCA\NmcSpica\Exception\ServiceException;
+use OCA\NmcSpica\Service\SpicaContactsService;
 use OCP\IAddressBook;
 use OCP\ICache;
 

@@ -24,10 +24,10 @@
 declare(strict_types=1);
 
 
-namespace OCA\NmcMail\Controller;
+namespace OCA\NmcSpica\Controller;
 
-use OCA\NmcMail\Model\Token;
-use OCA\NmcMail\Service\TokenService;
+use OCA\NmcSpica\Model\Token;
+use OCA\NmcSpica\Service\TokenService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http\JSONResponse;
 use OCP\IRequest;

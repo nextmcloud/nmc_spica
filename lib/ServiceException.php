@@ -21,7 +21,7 @@
  *
  */
 
-namespace OCA\NmcMail\Exception;
+namespace OCA\NmcSpica\Exception;
 
 use Exception;
 

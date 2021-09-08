@@ -22,9 +22,9 @@ declare(strict_types=1);
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-namespace OCA\NmcMail\Service;
+namespace OCA\NmcSpica\Service;
 
-use OCA\NmcMail\Exception\ServiceException;
+use OCA\NmcSpica\Exception\ServiceException;
 use OCP\Http\Client\IClientService;
 use OCP\IConfig;
 use Psr\Log\LoggerInterface;

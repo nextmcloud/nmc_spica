@@ -23,7 +23,7 @@
 (function() {
 
 	var renderHeader = function () {
-		var count = OCP.InitialState.loadState('nmc_mail', 'unread-counter')
+		var count = OCP.InitialState.loadState('nmc_spica', 'unread-counter')
 		var icon = document.createElement('div');
 		icon.classList = 'icon-mail';
 		var label = document.createElement('div');
@@ -31,8 +31,8 @@
 
 
 		var mailWrapper = document.createElement('a');
-		mailWrapper.href = OCP.InitialState.loadState('nmc_mail', 'mail-url')
-		mailWrapper.classList = 'nmc_mail_wrapper'
+		mailWrapper.href = OCP.InitialState.loadState('nmc_spica', 'mail-url')
+		mailWrapper.classList = 'nmc_spica_wrapper'
 		mailWrapper.appendChild(icon);
 		mailWrapper.appendChild(label);
 

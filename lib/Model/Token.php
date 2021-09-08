@@ -23,7 +23,7 @@
 
 declare(strict_types=1);
 
-namespace OCA\NmcMail\Model;
+namespace OCA\NmcSpica\Model;
 
 use JsonSerializable;
 

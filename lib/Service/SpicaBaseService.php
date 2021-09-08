@@ -21,10 +21,10 @@
  *
  */
 
-namespace OCA\NmcMail\Service;
+namespace OCA\NmcSpica\Service;
 
-use OCA\NmcMail\AppInfo\Application;
-use OCA\NmcMail\Exception\ServiceException;
+use OCA\NmcSpica\AppInfo\Application;
+use OCA\NmcSpica\Exception\ServiceException;
 use OCP\IConfig;
 
 class SpicaBaseService {

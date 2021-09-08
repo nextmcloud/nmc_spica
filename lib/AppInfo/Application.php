@@ -23,12 +23,12 @@
 
 declare(strict_types=1);
 
-namespace OCA\NmcMail\AppInfo;
+namespace OCA\NmcSpica\AppInfo;
 
-use OCA\NmcMail\Listener\TokenObtainedEventListener;
-use OCA\NmcMail\Service\TokenService;
-use OCA\NmcMail\Service\SpicaMailService;
-use OCA\NmcMail\SpicaAddressBook;
+use OCA\NmcSpica\Listener\TokenObtainedEventListener;
+use OCA\NmcSpica\Service\TokenService;
+use OCA\NmcSpica\Service\SpicaMailService;
+use OCA\NmcSpica\SpicaAddressBook;
 use OCA\UserOIDC\Event\TokenObtainedEvent;
 use OCP\AppFramework\App;
 use OCP\AppFramework\Bootstrap\IBootContext;
@@ -43,7 +43,7 @@ use OCP\IURLGenerator;
 use OCP\Util;
 
 class Application extends App implements IBootstrap {
-	public const APP_ID = 'nmc_mail';
+	public const APP_ID = 'nmc_spica';
 
 	public const USER_CONFIG_KEY_UNREAD_COUNT = 'unread-count';
 
@@ -77,12 +77,16 @@ class Application extends App implements IBootstrap {
 				return;
 			}
 
-			$contactsManager->registerAddressBook($spicaAddressBook);
 			$token = $tokenService->getToken();
+			if ($token === null) {
+				return;
+			}
+
+			$contactsManager->registerAddressBook($spicaAddressBook);
 
 			// TODO only for apge requests probably in middleware otherwise there would be a onetime failure if a api request hits this
 			// and it gets autoredirected to the idp for reauth
-			if ($token !== null && $token->isExpired()) {
+			if ($token->isExpired()) {
 				$tokenService->reauthenticate();
 			}
 
@@ -92,7 +96,7 @@ class Application extends App implements IBootstrap {
 			// Provide a regular navigation entry
 			$navigationManager->add(function () use ($l10n, $urlGenerator, $mailUrl) {
 				return [
-					'id' => 'nmc_mail',
+					'id' => 'nmc_spica',
 					'icon' => $urlGenerator->imagePath('core', 'mail.svg'),
 					'href' => $mailUrl,
 					'appname' => self::APP_ID,
@@ -100,7 +104,7 @@ class Application extends App implements IBootstrap {
 					'name' => $l10n->t('Mail'),
 				];
 			});
-			$navigationManager->setUnreadCounter('nmc_mail', $unreadCounter);
+			$navigationManager->setUnreadCounter('nmc_spica', $unreadCounter);
 
 			$initialState->provideLazyInitialState('unread-counter', function () use ($unreadCounter) {
 				return $unreadCounter;
@@ -110,8 +114,8 @@ class Application extends App implements IBootstrap {
 				return $mailUrl;
 			});
 
-			Util::addScript('nmc_mail', 'nmc_mail');
-			Util::addStyle('nmc_mail', 'nmc_mail');
+			Util::addScript('nmc_spica', 'nmc_spica');
+			Util::addStyle('nmc_spica', 'nmc_spica');
 		});
 	}
 }

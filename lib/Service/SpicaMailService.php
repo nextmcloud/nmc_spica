@@ -24,10 +24,10 @@
 declare(strict_types=1);
 
 
-namespace OCA\NmcMail\Service;
+namespace OCA\NmcSpica\Service;
 
 use Exception;
-use OCA\NmcMail\AppInfo\Application;
+use OCA\NmcSpica\AppInfo\Application;
 use OCP\Http\Client\IClientService;
 use OCP\ICache;
 use OCP\ICacheFactory;
