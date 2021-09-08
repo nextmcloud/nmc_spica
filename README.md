@@ -25,7 +25,7 @@ Setting a webmail url:
 
 ## Local testing
 
-A refresh token needs to be obtained from a system connected to Telekom Login.
+A refresh token needs to be obtained from a system connected to Telekom Login. This can be done in debug mode (e.g. on dev2 provided by T-Systems) when browsing the https://dev2.next.magentacloud.de/apps/nmc_spica/ url as the logged in user.
 
 Even without using Telekom Login, this app can be tested by manually providing a valid user token through app config:
 
