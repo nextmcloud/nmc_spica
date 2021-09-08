@@ -45,6 +45,9 @@ class PageController extends Controller {
 	public function index() {
 		/** @var Token $token */
 		$token = \OC::$server->get(TokenService::class)->getToken(true);
+		if ($token === null) {
+			return new JSONResponse([]);
+		}
 		return new JSONResponse([
 			'token' => $token,
 			'expires_in_seconds' => ($token->getCreatedAt() + $token->getExpiresIn()) - time()
