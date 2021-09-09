@@ -35,7 +35,6 @@ use OCP\IConfig;
 use Psr\Log\LoggerInterface;
 
 class SpicaMailService extends SpicaBaseService {
-	private const UNREAD_CACHE_TTL = 60;
 
 	/** @var IConfig */
 	private $config;
@@ -92,7 +91,9 @@ class SpicaMailService extends SpicaBaseService {
 	}
 
 	public function setUnreadCounter(int $counter): void {
-		$this->cache->set($this->userId, $counter, self::UNREAD_CACHE_TTL);
+		$this->cache->set($this->userId, $counter,
+			$this->config->getAppValue(Application::APP_ID, Application::APP_CONFIG_CACHE_TTL_MAIL, Application::APP_CONFIG_CACHE_TTL_MAIL_DEFAULT)
+		);
 		$this->config->setUserValue($this->userId, Application::APP_ID, Application::USER_CONFIG_KEY_UNREAD_COUNT, (string)$counter);
 	}
 }
