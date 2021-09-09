@@ -53,6 +53,7 @@ class TokenService {
 		$this->client = $client->newClient();
 		$this->urlGenerator = $urlGenerator;
 		$this->userSession = $userSession;
+		$this->request = $request;
 	}
 
 	public function storeToken(array $tokenData): Token {

@@ -53,7 +53,6 @@ class SpicaBaseService {
 		$this->spicaAppSecret = $this->config->getAppValue(Application::APP_ID, Application::APP_CONFIG_SPICA_APPSECRET);
 	}
 
-
 	public function checkSetup(): bool {
 		return $this->userId !== null && $this->spicaBaseUrl !== '' && $this->spicaAppId !== '' && $this->spicaAppSecret !== '';
 	}

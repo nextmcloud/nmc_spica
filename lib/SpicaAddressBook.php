@@ -24,12 +24,18 @@ declare(strict_types=1);
  */
 namespace OCA\NmcSpica;
 
+use OCA\NmcSpica\AppInfo\Application;
 use OCA\NmcSpica\Exception\ServiceException;
 use OCA\NmcSpica\Service\SpicaContactsService;
 use OCP\IAddressBook;
 use OCP\ICache;
+use OCP\ICacheFactory;
+use OCP\IConfig;
 
 class SpicaAddressBook implements IAddressBook {
+
+	/** @var IConfig */
+	private $config;
 
 	/** @var ICache */
 	private $cache;
@@ -37,7 +43,7 @@ class SpicaAddressBook implements IAddressBook {
 	/** @var SpicaContactsService */
 	private $spicaContactsService;
 
-	/** @var string */
+	/** @var string|null */
 	private $userId;
 
 	/**
@@ -45,9 +51,10 @@ class SpicaAddressBook implements IAddressBook {
 	 *
 	 * @param SpicaContactsService $spicaContactsService
 	 */
-	public function __construct(ICache $cache,SpicaContactsService $spicaContactsService, $userId) {
+	public function __construct(IConfig $config, ICacheFactory $cacheFactory, SpicaContactsService $spicaContactsService, $userId) {
 		$this->spicaContactsService = $spicaContactsService;
-		$this->cache = $cache;
+		$this->config = $config;
+		$this->cache = $cacheFactory->createDistributed(Application::APP_ID . '_contacts');
 		$this->userId = $userId;
 	}
 
@@ -56,7 +63,7 @@ class SpicaAddressBook implements IAddressBook {
 	}
 
 	public function getUri(): string {
-		return $this->spicaContactsService->getSpicaBaseUrl(); // expose this or no?
+		return $this->spicaContactsService->getSpicaBaseUrl(''); // expose this or no?
 	}
 
 	public function getDisplayName() {
@@ -74,12 +81,15 @@ class SpicaAddressBook implements IAddressBook {
 	 * @since 5.0.0
 	 */
 	public function search($pattern, $searchProperties, $options) {
-		//cache get here - set will be done in search results. This also needs some kind of userId check
-//		$hit = $this->cache->get($pattern);
-//
-//		if ($hit !== null) {
-//			return $hit;
-//		}
+		// use all arguments combined with the user id as a cache key
+		$cacheKey = md5(json_encode([
+			$this->userId, $pattern, $searchProperties, $options
+		], JSON_THROW_ON_ERROR));
+		$hit = $this->cache->get($cacheKey);
+
+		if ($hit !== null) {
+			return $hit;
+		}
 		try {
 			$result = $this->spicaContactsService->search($pattern, $options);
 		} catch (ServiceException $e) {
@@ -102,8 +112,9 @@ class SpicaAddressBook implements IAddressBook {
 			}, $emails);
 		}, $contacts));
 
-		// 10 mins enough?
-//		$this->cache->set($pattern, $result, 3600);
+		$this->cache->set($cacheKey, $result,
+			$this->config->getAppValue(Application::APP_ID, Application::APP_CONFIG_CACHE_TTL_CONTACTS, Application::APP_CONFIG_CACHE_TTL_CONTACTS_DEFAULT)
+		);
 
 		return $result;
 	}
