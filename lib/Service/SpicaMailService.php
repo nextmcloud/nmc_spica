@@ -96,4 +96,8 @@ class SpicaMailService extends SpicaBaseService {
 		);
 		$this->config->setUserValue($this->userId, Application::APP_ID, Application::USER_CONFIG_KEY_UNREAD_COUNT, (string)$counter);
 	}
+
+	public function resetCache(): void {
+		$this->cache->remove($this->userId);
+	}
 }

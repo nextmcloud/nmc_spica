@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace OCA\NmcSpica\Listener;
 
+use OCA\NmcSpica\Service\SpicaMailService;
 use OCA\NmcSpica\Service\TokenService;
 use OCA\UserOIDC\Event\TokenObtainedEvent;
 use OCP\EventDispatcher\Event;
@@ -39,9 +40,13 @@ class TokenObtainedEventListener implements IEventListener {
 	/** @var TokenService */
 	private $tokenService;
 
-	public function __construct(IClientService $clientService, TokenService $tokenService) {
+	/** @var SpicaMailService */
+	private $mailService;
+
+	public function __construct(IClientService $clientService, TokenService $tokenService, SpicaMailService $mailService) {
 		$this->clientService = $clientService;
 		$this->tokenService = $tokenService;
+		$this->mailService = $mailService;
 	}
 
 	public function handle(Event $event): void {
@@ -77,6 +82,7 @@ class TokenObtainedEventListener implements IEventListener {
 
 		$this->tokenService->storeToken(array_merge($tokenData, ['provider_id' => $provider->getId()]));
 
-		// TODO: initial fetch
+		$this->mailService->resetCache();
+		$this->mailService->fetchUnreadCounter();
 	}
 }
