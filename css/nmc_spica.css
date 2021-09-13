@@ -7,3 +7,19 @@
 .nmc_spica_wrapper .icon-mail {
 	padding: 12px;
 }
+
+.nmc_spica_wrapper .unread-badge {
+	display: none;
+}
+
+.nmc_spica_wrapper .has-unread {
+	border-radius: 14px;
+	background-color: var(--color-error);
+	display: block;
+	min-width: 20px;
+	height: 20px;
+	font-size: 12px;
+	text-align: center;
+	padding: 0 3px;
+	line-height: 150%;
+}

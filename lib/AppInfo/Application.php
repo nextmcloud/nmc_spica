@@ -95,28 +95,12 @@ class Application extends App implements IBootstrap {
 				$tokenService->reauthenticate();
 			}
 
-			$unreadCounter = $unreadService->getUnreadCounter();
-			$mailUrl = $config->getAppValue(self::APP_ID, self::APP_CONFIG_WEBMAIL_URL, '');
-
-			// Provide a regular navigation entry
-			$navigationManager->add(function () use ($l10n, $urlGenerator, $mailUrl) {
-				return [
-					'id' => 'nmc_spica',
-					'icon' => $urlGenerator->imagePath('core', 'mail.svg'),
-					'href' => $mailUrl,
-					'appname' => self::APP_ID,
-					'order' => 25,
-					'name' => $l10n->t('Mail'),
-				];
-			});
-			$navigationManager->setUnreadCounter('nmc_spica', $unreadCounter);
-
-			$initialState->provideLazyInitialState('unread-counter', function () use ($unreadCounter) {
-				return $unreadCounter;
+			$initialState->provideLazyInitialState('unread-counter', function () use ($unreadService) {
+				return $unreadService->getUnreadCounter();
 			});
 
-			$initialState->provideLazyInitialState('mail-url', function () use ($mailUrl) {
-				return $mailUrl;
+			$initialState->provideLazyInitialState('mail-url', function () use ($config) {
+				return $config->getAppValue(self::APP_ID, self::APP_CONFIG_WEBMAIL_URL, '');;
 			});
 
 			Util::addScript('nmc_spica', 'nmc_spica');

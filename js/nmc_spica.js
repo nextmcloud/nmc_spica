@@ -21,22 +21,26 @@
  */
 
 (function() {
-
 	var renderHeader = function () {
-		var count = OCP.InitialState.loadState('nmc_spica', 'unread-counter')
+		var count = OCP.InitialState.loadState('nmc_spica', 'unread-counter');
 		var icon = document.createElement('div');
 		icon.classList = 'icon-mail';
-		var label = document.createElement('div');
-		label.textContent = 'Mail' + ' (' + count + ')'
+		var badge = document.createElement('span');
+		var hasUnread = (count > 0);
+		badge.classList = 'unread-badge' + (hasUnread ? ' has-unread' : '');
+		badge.textContent = count;
 
+		var label = document.createElement('div');
+		label.textContent = t('core', 'Mail');
 
 		var mailWrapper = document.createElement('a');
-		mailWrapper.href = OCP.InitialState.loadState('nmc_spica', 'mail-url')
-		mailWrapper.classList = 'nmc_spica_wrapper'
+		mailWrapper.href = OCP.InitialState.loadState('nmc_spica', 'mail-url');
+		mailWrapper.classList = 'nmc_spica_wrapper';
 		mailWrapper.appendChild(icon);
+		mailWrapper.appendChild(badge);
 		mailWrapper.appendChild(label);
 
-		return mailWrapper
+		return mailWrapper;
 	}
 
 	document.querySelector('.header-right').insertBefore(renderHeader(), document.getElementById('unified-search'));
