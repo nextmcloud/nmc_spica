@@ -89,8 +89,6 @@ class Application extends App implements IBootstrap {
 
 			$contactsManager->registerAddressBook($spicaAddressBook);
 
-			// TODO only for apge requests probably in middleware otherwise there would be a onetime failure if a api request hits this
-			// and it gets autoredirected to the idp for reauth
 			if ($token->isExpired()) {
 				$tokenService->reauthenticate();
 			}
