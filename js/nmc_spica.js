@@ -31,8 +31,10 @@
 		badge.textContent = count;
 
 		var label = document.createElement('div');
-		label.textContent = t('core', 'Mail');
+		label.textContent = t('core', 'Email');
 
+		var parentMailWrapper = document.createElement('div');
+		parentMailWrapper.id = "contactsmenu";
 		var mailWrapper = document.createElement('a');
 		mailWrapper.href = OCP.InitialState.loadState('nmc_spica', 'mail-url');
 		mailWrapper.classList = 'nmc_spica_wrapper';
@@ -40,8 +42,9 @@
 		mailWrapper.appendChild(badge);
 		mailWrapper.appendChild(label);
 
-		return mailWrapper;
+		parentMailWrapper.appendChild(mailWrapper);
+		return parentMailWrapper;
 	}
 
-	document.querySelector('.header-right').insertBefore(renderHeader(), document.getElementById('unified-search'));
+	document.querySelector('.header-right').insertBefore(renderHeader(), document.getElementById('settings'));
 })()

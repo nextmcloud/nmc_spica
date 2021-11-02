@@ -78,6 +78,8 @@ class Application extends App implements IBootstrap {
 			IConfig $config,
 			$userId
 		) {
+			Util::addScript('nmc_spica', 'nmc_spica');
+			Util::addStyle('nmc_spica', 'nmc_spica');
 			if (!$userId) {
 				return;
 			}
