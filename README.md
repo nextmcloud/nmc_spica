@@ -1,5 +1,9 @@
 # NextMagentacloud app for SPICA integration
 
+## Delivery
+
+As this repo is kept private the customer does not have access to the repos and releases, therefore both are currently mirrored manually to the private repo at the customer side https://github.com/nextmcloud/nmc_spica. Currently Julius, Julien and Tobias have access to their organization on GitHub, Björn has the customer contact in case additional people may need access.
+
 ## Implemented features:
 - Unread email counter
 - Address book search
