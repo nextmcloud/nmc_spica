@@ -37,6 +37,7 @@
 		parentMailWrapper.id = "contactsmenu";
 		var mailWrapper = document.createElement('a');
 		mailWrapper.href = OCP.InitialState.loadState('nmc_spica', 'mail-url');
+		mailWrapper.target = "_blank";
 		mailWrapper.classList = 'nmc_spica_wrapper';
 		mailWrapper.appendChild(icon);
 		mailWrapper.appendChild(badge);
