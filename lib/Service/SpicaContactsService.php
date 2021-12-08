@@ -24,7 +24,7 @@ declare(strict_types=1);
  */
 namespace OCA\NmcSpica\Service;
 
-use OCA\NmcSpica\Exception\ServiceException;
+use OCA\NmcSpica\ServiceException;
 use OCP\Http\Client\IClientService;
 use OCP\IConfig;
 use Psr\Log\LoggerInterface;
