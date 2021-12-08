@@ -21,7 +21,7 @@
  *
  */
 
-namespace OCA\NmcSpica\Exception;
+namespace OCA\NmcSpica;
 
 use Exception;
 
