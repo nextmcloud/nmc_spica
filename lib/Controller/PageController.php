@@ -26,15 +26,23 @@ declare(strict_types=1);
 
 namespace OCA\NmcSpica\Controller;
 
+use OCA\NmcSpica\AppInfo\Application;
 use OCA\NmcSpica\Model\Token;
 use OCA\NmcSpica\Service\TokenService;
 use OCP\AppFramework\Controller;
+use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\JSONResponse;
+use OCP\IConfig;
 use OCP\IRequest;
 
 class PageController extends Controller {
-	public function __construct($appName, IRequest $request) {
+
+	/** @var IConfig  */
+	private $config;
+
+	public function __construct($appName, IRequest $request, IConfig $config) {
 		parent::__construct($appName, $request);
+		$this->config = $config;
 	}
 
 	/**
@@ -43,6 +51,12 @@ class PageController extends Controller {
 	 * @UseSession
 	 */
 	public function index() {
+		$debugToken = $this->config->getAppValue(Application::APP_ID, 'debug_token', '');
+		$isDebugMode = $this->config->getSystemValueBool('debug', false);
+		$isDebugToken = $debugToken !== '' && $debugToken === $this->request->getParam('debug_token', null);
+		if (!$isDebugMode && !$isDebugToken) {
+			return new JSONResponse([], Http::STATUS_FORBIDDEN);
+		}
 		/** @var Token $token */
 		$token = \OC::$server->get(TokenService::class)->getToken(true);
 		if ($token === null) {
