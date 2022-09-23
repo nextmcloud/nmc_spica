@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace OCA\NmcSpica\Model;
 
 use JsonSerializable;
+use ReturnTypeWillChange;
 
 class Token implements JsonSerializable {
 
@@ -84,6 +85,7 @@ class Token implements JsonSerializable {
 		return $this->createdAt;
 	}
 
+	#[ReturnTypeWillChange]
 	public function jsonSerialize(): array {
 		return [
 			'id_token' => $this->idToken,
