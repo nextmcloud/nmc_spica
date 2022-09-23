@@ -91,7 +91,7 @@ class Application extends App implements IBootstrap {
 
 			$contactsManager->registerAddressBook($spicaAddressBook);
 
-			if ($token->isExpired()) {
+			if ($token !== null && $token->isExpired()) {
 				$tokenService->reauthenticate();
 			}
 
