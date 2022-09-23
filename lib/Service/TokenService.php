@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace OCA\NmcSpica\Service;
 
+use OCA\NmcSpica\AppInfo\Application;
 use OCA\NmcSpica\Model\Token;
 use OCA\UserOIDC\Db\Provider;
 use OCA\UserOIDC\Db\ProviderMapper;
@@ -32,6 +33,7 @@ use OCP\Http\Client\IClient;
 use OCP\Http\Client\IClientService;
 use OCP\ICache;
 use OCP\ICacheFactory;
+use OCP\IConfig;
 use OCP\IRequest;
 use OCP\ISession;
 use OCP\IURLGenerator;
@@ -58,8 +60,10 @@ class TokenService {
 	private $logger;
 	/** @var ICache */
 	private $cache;
+	/** @var IConfig */
+	private $config;
 
-	public function __construct(ISession $session, IClientService $client, IURLGenerator $urlGenerator, IUserSession $userSession, IRequest $request, LoggerInterface $logger, ICacheFactory $cacheFactory) {
+	public function __construct(ISession $session, IClientService $client, IURLGenerator $urlGenerator, IUserSession $userSession, IRequest $request, LoggerInterface $logger, ICacheFactory $cacheFactory, IConfig $config) {
 		$this->session = $session;
 		$this->client = $client->newClient();
 		$this->urlGenerator = $urlGenerator;
@@ -67,12 +71,17 @@ class TokenService {
 		$this->request = $request;
 		$this->logger = $logger;
 		$this->cache = $cacheFactory->createDistributed('nmc_spica');
+		$this->config = $config;
 	}
 
 	public function storeToken(array $tokenData): Token {
 		$token = new Token($tokenData);
 		$this->session->set(self::SESSION_TOKEN_KEY, json_encode($token, JSON_THROW_ON_ERROR));
 		return $token;
+	}
+
+	public function getUserDebugToken(): string {
+		return $this->config->getAppValue(Application::APP_ID, 'spica-usertoken', '');
 	}
 
 	public function getToken(bool $refresh = true): ?Token {

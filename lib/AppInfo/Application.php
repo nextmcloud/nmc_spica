@@ -85,7 +85,7 @@ class Application extends App implements IBootstrap {
 			}
 
 			$token = $tokenService->getToken();
-			if ($token === null) {
+			if ($token === null && $tokenService->getUserDebugToken() === '') {
 				return;
 			}
 

@@ -39,7 +39,5 @@ With that the token can be obtained from the system by passing it as an url para
 
 Even without using Telekom Login, this app can be tested by manually providing a valid user token through app config:
 
-	export REFRESH_TOKEN="RT2:8323c845-328d-4535-81d6-985787516979:945c6cce-6595-48eb-9312-7ab0aac112e3"
-	export SPICA_TOKEN=`curl -X POST https://accounts.login00.idm.ver.sul.t-online.de/oauth2/tokens -d "grant_type=refresh_token&client_id=$OIDC_CLIENT_ID&client_secret=$OIDC_CLIENT_SECRET&refresh_token=$REFRESH_TOKEN&scope=spica" | jq -r .access_token`
-	occ config:app:set nmc_spica spica-usertoken --value="$SPICA_TOKEN"
+	occ config:app:set nmc_spica spica-usertoken --value="idtokenvalue"
 
