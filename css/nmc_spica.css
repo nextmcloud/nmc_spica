@@ -13,13 +13,54 @@
 }
 
 .nmc_spica_wrapper .has-unread {
-	border-radius: 14px;
-	background-color: var(--color-error);
+	border-radius: 20px;
+	background-color: var(--color-background-plain);
 	display: block;
-	min-width: 20px;
-	height: 20px;
-	font-size: 12px;
+	min-width: 0.625rem;
+	height: 0.875rem;
+	font-size: 0.688rem;
 	text-align: center;
-	padding: 0 3px;
-	line-height: 150%;
+	padding: 0.063rem 0.25rem 0 0.25rem ;
+	line-height: 110%;
+	margin-top: -20px;
+	margin-left: -18px;
+	color: var(--white-color);
+	font-weight: 700;
+}
+
+#contactsmenu {
+	margin-right: 1.5rem;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.nmc_spica_wrapper .icon-mail {
+	background-image: var(--icon-mail-custom);
+}
+
+.nmc_spica_wrapper div {
+	font-size: 0.75rem;
+	font-weight: bold;
+	color: var(--white-color);
+}
+
+.nmc_spica_wrapper .unread-badge + div {
+	display: none;
+}
+
+.header-right {
+	display: flex;
+}
+
+#contactsmenu.header-menu {
+	display: none;
+}
+
+div#contactsmenu {
+	order: 2;
+}
+
+div#user-menu {
+	order: 3;
 }
