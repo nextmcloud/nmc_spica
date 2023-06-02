@@ -4,7 +4,7 @@
 	<name>NextMagentaCloud Mail integration</name>
 	<summary>Utility app for frontend integration with mail</summary>
 	<description>This utility app supports Magentacloud mail status in the front end</description>
-	<version>0.1.2</version>
+	<version>0.1.5</version>
 	<licence>agpl</licence>
 	<author>Julius Härtl</author>
 	<namespace>NmcSpica</namespace>
