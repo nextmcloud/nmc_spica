@@ -1,14 +1,42 @@
 {
-  "name": "nextcloud/nmc_spica",
-  "scripts": {
-    "cs:fix": "php-cs-fixer fix",
-    "cs:check": "php-cs-fixer fix --dry-run --diff",
-    "lint": "find . -name \\*.php -not -path './vendor/*' -exec php -l \"{}\" \\;",
-    "test:unit": "phpunit -c tests/phpunit.xml"
+  "name": "nextmcloud/nmc_spica",
+  "description": "MagentaCLOUD spica integration app",
+  "type": "project",
+  "license": "AGPL3",
+  "authors": [
+    {
+        "name": "Julius Härtl",
+        "email": "julius@nextcloud.com"
+    }
+  ],
+  "require": {
+    "php": "^8.0"
   },
   "require-dev": {
-    "nextcloud/coding-standard": "^0.5.0",
-    "symfony/event-dispatcher": "^4",
-    "phpunit/phpunit": "^9.5"
+    "roave/security-advisories": "dev-master",
+    "nextcloud/coding-standard": "^1.0.0",
+    "psalm/phar": "^5.4",
+    "phpunit/phpunit": "^9.5",
+    "ext-mbstring": "*",
+    "nextcloud/ocp": "dev-master"
+  },
+  "config": {
+    "optimize-autoloader": true,
+    "classmap-authoritative": true,
+    "platform": {
+        "php": "8.0"
+    }
+  },
+  "scripts": {
+    "lint": "find . -name \\*.php -not -path './vendor/*' -print0 | xargs -0 -n1 php -l",
+    "cs:check": "php-cs-fixer fix --dry-run --diff",
+    "cs:fix": "php-cs-fixer fix",
+    "psalm": "psalm.phar",
+    "test:unit": "phpunit -c tests/phpunit.xml"
+  },
+  "autoload-dev": {
+    "psr-4": {
+        "OCP\\": "vendor/nextcloud/ocp/OCP"
+    }
   }
 }
