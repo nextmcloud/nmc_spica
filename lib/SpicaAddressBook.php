@@ -25,7 +25,6 @@ declare(strict_types=1);
 namespace OCA\NmcSpica;
 
 use OCA\NmcSpica\AppInfo\Application;
-use OCA\NmcSpica\Exception\ServiceException;
 use OCA\NmcSpica\Service\SpicaContactsService;
 use OCP\IAddressBook;
 use OCP\ICache;
@@ -103,12 +102,12 @@ class SpicaAddressBook implements IAddressBook {
 		// form the result set
 		$result = array_merge(...array_map(static function ($contact) {
 			$emails = $contact['emails'] ?? [];
-			$template = ['FN' => ($contact['first'] ?? '') . ' ' . ($contact['last'] ?? '') ];
+			$template = ['UID' => ($contact['first'] ?? '') . ' ' . ($contact['last'] ?? ''),'FN' => ($contact['first'] ?? '') . ' ' . ($contact['last'] ?? '') ];
 			if (empty($emails)) {
 				return [array_merge($template, ['EMAIL' => ''])];
 			}
 			return array_map(static function ($email) use ($template) {
-				return array_merge($template, ['EMAIL' => $email['email']]);
+				return array_merge($template, ['EMAIL' => $email['email'], 'UID' => $email['email']]);
 			}, $emails);
 		}, $contacts));
 

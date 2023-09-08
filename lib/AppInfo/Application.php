@@ -85,13 +85,13 @@ class Application extends App implements IBootstrap {
 			}
 
 			$token = $tokenService->getToken();
-			if ($token === null) {
+			if ($token === null && $tokenService->getUserDebugToken() === '') {
 				return;
 			}
 
 			$contactsManager->registerAddressBook($spicaAddressBook);
 
-			if ($token->isExpired()) {
+			if ($token !== null && $token->isExpired()) {
 				$tokenService->reauthenticate();
 			}
 

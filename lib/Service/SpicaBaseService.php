@@ -24,7 +24,7 @@
 namespace OCA\NmcSpica\Service;
 
 use OCA\NmcSpica\AppInfo\Application;
-use OCA\NmcSpica\Exception\ServiceException;
+use OCA\NmcSpica\ServiceException;
 use OCP\IConfig;
 
 class SpicaBaseService {

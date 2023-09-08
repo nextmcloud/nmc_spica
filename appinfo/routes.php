@@ -23,11 +23,6 @@
 
 declare(strict_types=1);
 
-// FIXME: Remove - for debugging purposes only
-if (!\OC::$server->getSystemConfig()->getValue('debug', false)) {
-	return [];
-}
-
 return [
 	'routes' => [
 		['name' => 'page#index', 'url' => '/', 'verb' => 'GET'],

@@ -25,16 +25,25 @@ declare(strict_types=1);
 
 namespace OCA\NmcSpica\Service;
 
+use OCA\NmcSpica\AppInfo\Application;
 use OCA\NmcSpica\Model\Token;
+use OCA\UserOIDC\Db\Provider;
 use OCA\UserOIDC\Db\ProviderMapper;
 use OCP\Http\Client\IClient;
 use OCP\Http\Client\IClientService;
+use OCP\ICache;
+use OCP\ICacheFactory;
+use OCP\IConfig;
 use OCP\IRequest;
 use OCP\ISession;
 use OCP\IURLGenerator;
 use OCP\IUserSession;
+use Psr\Log\LoggerInterface;
 
 class TokenService {
+
+	private const INVALIDATE_DISCOVERY_CACHE_AFTER_SECONDS = 3600;
+
 	private const SESSION_TOKEN_KEY = 'nmcuser-token';
 
 	/** @var ISession */
@@ -47,19 +56,32 @@ class TokenService {
 	private $userSession;
 	/** @var IRequest */
 	private $request;
+	/** @var LoggerInterface */
+	private $logger;
+	/** @var ICache */
+	private $cache;
+	/** @var IConfig */
+	private $config;
 
-	public function __construct(ISession $session, IClientService $client, IURLGenerator $urlGenerator, IUserSession $userSession, IRequest $request) {
+	public function __construct(ISession $session, IClientService $client, IURLGenerator $urlGenerator, IUserSession $userSession, IRequest $request, LoggerInterface $logger, ICacheFactory $cacheFactory, IConfig $config) {
 		$this->session = $session;
 		$this->client = $client->newClient();
 		$this->urlGenerator = $urlGenerator;
 		$this->userSession = $userSession;
 		$this->request = $request;
+		$this->logger = $logger;
+		$this->cache = $cacheFactory->createDistributed('nmc_spica');
+		$this->config = $config;
 	}
 
 	public function storeToken(array $tokenData): Token {
 		$token = new Token($tokenData);
 		$this->session->set(self::SESSION_TOKEN_KEY, json_encode($token, JSON_THROW_ON_ERROR));
 		return $token;
+	}
+
+	public function getUserDebugToken(): string {
+		return $this->config->getAppValue(Application::APP_ID, 'spica-usertoken', '');
 	}
 
 	public function getToken(bool $refresh = true): ?Token {
@@ -83,7 +105,7 @@ class TokenService {
 		/** @var ProviderMapper $providerMapper */
 		$providerMapper = \OC::$server->get(ProviderMapper::class);
 		$oidcProvider = $providerMapper->getProvider($token->getProviderId());
-		$discovery = $this->obtainDiscovery($oidcProvider->getDiscoveryEndpoint());
+		$discovery = $this->obtainDiscovery($oidcProvider);
 
 		try {
 			$result = $this->client->post(
@@ -105,14 +127,25 @@ class TokenService {
 				)
 			);
 		} catch (\Exception $e) {
+			$this->logger->error('Failed to refresh spica scope token', ['exception' => $e]);
 			// Failed to refresh, return old token which will be retried or otherwise timeout if expired
 			return $token;
 		}
 	}
 
-	private function obtainDiscovery(string $url) {
-		$response = $this->client->get($url);
-		return json_decode($response->getBody(), true);
+	public function obtainDiscovery(Provider $provider): array {
+		$cacheKey = 'discovery-' . $provider->getId();
+		$cachedDiscovery = $this->cache->get($cacheKey);
+		if ($cachedDiscovery === null) {
+			$url = $provider->getDiscoveryEndpoint();
+			$this->logger->debug('Obtaining discovery endpoint: ' . $url);
+
+			$response = $this->client->get($url);
+			$cachedDiscovery = $response->getBody();
+			$this->cache->set($cacheKey, $cachedDiscovery, self::INVALIDATE_DISCOVERY_CACHE_AFTER_SECONDS);
+		}
+
+		return json_decode($cachedDiscovery, true, 512, JSON_THROW_ON_ERROR);
 	}
 
 	public function reauthenticate() {
