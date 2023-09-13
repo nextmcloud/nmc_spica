@@ -47,5 +47,5 @@
 		return parentMailWrapper;
 	}
 
-	document.querySelector('.header-right').insertBefore(renderHeader(), document.getElementById('settings'));
+	document.querySelector('.header-right')?.insertBefore(renderHeader(), document.getElementById('settings'));
 })()
