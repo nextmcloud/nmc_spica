@@ -31,22 +31,19 @@ use OCA\UserOIDC\Event\TokenObtainedEvent;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
 use OCP\Http\Client\IClientService;
+use Psr\Log\LoggerInterface;
 
 class TokenObtainedEventListener implements IEventListener {
+	private IClientService $clientService;
+	private TokenService $tokenService;
+	private SpicaMailService $mailService;
+	private LoggerInterface $logger;
 
-	/** @var IClientService */
-	private $clientService;
-
-	/** @var TokenService */
-	private $tokenService;
-
-	/** @var SpicaMailService */
-	private $mailService;
-
-	public function __construct(IClientService $clientService, TokenService $tokenService, SpicaMailService $mailService) {
+	public function __construct(IClientService $clientService, TokenService $tokenService, SpicaMailService $mailService, LoggerInterface $logger) {
 		$this->clientService = $clientService;
 		$this->tokenService = $tokenService;
 		$this->mailService = $mailService;
+		$this->logger = $logger;
 	}
 
 	public function handle(Event $event): void {
@@ -54,35 +51,40 @@ class TokenObtainedEventListener implements IEventListener {
 			return;
 		}
 
-		$token = $event->getToken();
-		$provider = $event->getProvider();
-		$discovery = $event->getDiscovery();
+		try {
+			$token = $event->getToken();
+			$provider = $event->getProvider();
+			$discovery = $event->getDiscovery();
 
-		$refreshToken = $token['refresh_token'] ?? null;
+			$refreshToken = $token['refresh_token'] ?? null;
 
-		if (!$refreshToken) {
-			return;
+			if (!$refreshToken) {
+				return;
+			}
+
+			$client = $this->clientService->newClient();
+			$result = $client->post(
+				$discovery['token_endpoint'],
+				[
+					'body' => [
+						'client_id' => $provider->getClientId(),
+						'client_secret' => $provider->getClientSecret(),
+						'grant_type' => 'refresh_token',
+						'refresh_token' => $refreshToken,
+						'scope' => 'spica',
+					],
+				]
+			);
+
+			$tokenData = json_decode($result->getBody(), true);
+
+			$this->tokenService->storeToken(array_merge($tokenData, ['provider_id' => $provider->getId()]));
+
+			$this->mailService->resetCache();
+			$this->mailService->fetchUnreadCounter();
+		} catch (\Throwable $e) {
+			// Only log exceptions but do not block login
+			$this->logger->error('Failed to handle oidc token for spica initialization', ['exception' => $e]);
 		}
-
-		$client = $this->clientService->newClient();
-		$result = $client->post(
-			$discovery['token_endpoint'],
-			[
-				'body' => [
-					'client_id' => $provider->getClientId(),
-					'client_secret' => $provider->getClientSecret(),
-					'grant_type' => 'refresh_token',
-					'refresh_token' => $refreshToken,
-					'scope' => 'spica',
-				],
-			]
-		);
-
-		$tokenData = json_decode($result->getBody(), true);
-
-		$this->tokenService->storeToken(array_merge($tokenData, ['provider_id' => $provider->getId()]));
-
-		$this->mailService->resetCache();
-		$this->mailService->fetchUnreadCounter();
 	}
 }
