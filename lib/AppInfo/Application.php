@@ -26,8 +26,8 @@ declare(strict_types=1);
 namespace OCA\NmcSpica\AppInfo;
 
 use OCA\NmcSpica\Listener\TokenObtainedEventListener;
-use OCA\NmcSpica\Service\TokenService;
 use OCA\NmcSpica\Service\SpicaMailService;
+use OCA\NmcSpica\Service\TokenService;
 use OCA\NmcSpica\SpicaAddressBook;
 use OCA\UserOIDC\Event\TokenObtainedEvent;
 use OCP\AppFramework\App;
@@ -100,7 +100,8 @@ class Application extends App implements IBootstrap {
 			});
 
 			$initialState->provideLazyInitialState('mail-url', function () use ($config) {
-				return $config->getAppValue(self::APP_ID, self::APP_CONFIG_WEBMAIL_URL, '');;
+				return $config->getAppValue(self::APP_ID, self::APP_CONFIG_WEBMAIL_URL, '');
+				;
 			});
 
 			Util::addScript('nmc_spica', 'nmc_spica');
