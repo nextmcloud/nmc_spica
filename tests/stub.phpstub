@@ -1,0 +1,10 @@
+<?php
+
+namespace OCA\UserOIDC\Db {
+	abstract class Provider {
+		public function getId();
+		 public function getDiscoveryEndpoint(): string;
+	}
+	class ProviderMapper {}
+}
+
