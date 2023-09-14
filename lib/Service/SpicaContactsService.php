@@ -40,8 +40,8 @@ class SpicaContactsService extends SpicaBaseService {
 	/** @var string|null */
 	private $userId;
 
-	public function __construct(IConfig $config, TokenService $tokenService, IClientService $clientService, LoggerInterface $logger, $userId) {
-		parent::__construct($config, $tokenService, $userId);
+	public function __construct(IConfig $config, TokenService $tokenService, IClientService $clientService, LoggerInterface $logger, ?string $userId) {
+		parent::__construct($config, $logger, $tokenService, $userId);
 		$this->clientService = $clientService;
 		$this->logger = $logger;
 		$this->userId = $userId;

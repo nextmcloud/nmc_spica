@@ -34,6 +34,7 @@ use OCP\Http\Client\IClientService;
 use Psr\Log\LoggerInterface;
 use OCP\Security\ICrypto;
 
+/** @template-implements IEventListener<TokenObtainedEvent|Event> */
 class TokenObtainedEventListener implements IEventListener {
 	private IClientService $clientService;
 	private TokenService $tokenService;
@@ -83,7 +84,7 @@ class TokenObtainedEventListener implements IEventListener {
 				]
 			);
 
-			$tokenData = json_decode($result->getBody(), true);
+			$tokenData = json_decode((string)$result->getBody(), true);
 
 			$this->tokenService->storeToken(array_merge($tokenData, ['provider_id' => $provider->getId()]));
 
