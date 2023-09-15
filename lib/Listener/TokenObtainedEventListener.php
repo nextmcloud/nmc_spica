@@ -31,8 +31,8 @@ use OCA\UserOIDC\Event\TokenObtainedEvent;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
 use OCP\Http\Client\IClientService;
-use Psr\Log\LoggerInterface;
 use OCP\Security\ICrypto;
+use Psr\Log\LoggerInterface;
 
 /** @template-implements IEventListener<TokenObtainedEvent|Event> */
 class TokenObtainedEventListener implements IEventListener {
@@ -40,18 +40,18 @@ class TokenObtainedEventListener implements IEventListener {
 	private TokenService $tokenService;
 	private SpicaMailService $mailService;
 	private LoggerInterface $logger;
-	private ICrypto $crypt;
+	private ICrypto $crypto;
 
-	public function __construct(IClientService $clientService, 
-            TokenService $tokenService, 
-            SpicaMailService $mailService, 
-            LoggerInterface $logger,
-            ICrypto $crypto) {
+	public function __construct(IClientService $clientService,
+		TokenService $tokenService,
+		SpicaMailService $mailService,
+		LoggerInterface $logger,
+		ICrypto $crypto) {
 		$this->clientService = $clientService;
 		$this->tokenService = $tokenService;
 		$this->mailService = $mailService;
 		$this->logger = $logger;
-        $this->crypto = $crypto;
+		$this->crypto = $crypto;
 	}
 
 	public function handle(Event $event): void {
@@ -91,12 +91,12 @@ class TokenObtainedEventListener implements IEventListener {
 			$this->mailService->resetCache();
 			$this->mailService->fetchUnreadCounter();
 		} catch (\Throwable $e) {
-            if (str_starts_with(get_class($e), 'PHPUnit')) {
-                // to keep unit test assertions enabled
-                throw $e;
-            }
+			if (str_starts_with(get_class($e), 'PHPUnit')) {
+				// to keep unit test assertions enabled
+				throw $e;
+			}
 
-            // Only log exceptions but do not block login
+			// Only log exceptions but do not block login
 			$this->logger->error('Failed to handle oidc token for spica initialization', ['exception' => $e]);
 		}
 	}
