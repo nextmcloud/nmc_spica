@@ -1,0 +1,17 @@
+<?php
+
+namespace OCA\UserOIDC\Db {
+	abstract class Provider {
+		public function getId();
+		 public function getDiscoveryEndpoint(): string;
+	}
+	class ProviderMapper {}
+}
+
+namespace OCA\UserOIDC\Event {
+	abstract class TokenObtainedEvent extends \OCP\EventDispatcher\Event {
+		public function getToken();
+		public function getProvider();
+		public function getDiscovery();
+	}
+}

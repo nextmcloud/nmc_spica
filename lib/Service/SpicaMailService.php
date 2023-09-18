@@ -47,8 +47,8 @@ class SpicaMailService extends SpicaBaseService {
 	/** @var string|null */
 	private $userId;
 
-	public function __construct(IConfig $config, IClientService $clientService, LoggerInterface $logger, TokenService $tokenService, ICacheFactory $cacheFactory, $userId) {
-		parent::__construct($config, $tokenService, $userId);
+	public function __construct(IConfig $config, IClientService $clientService, LoggerInterface $logger, TokenService $tokenService, ICacheFactory $cacheFactory, ?string $userId) {
+		parent::__construct($config, $logger, $tokenService, $userId);
 		$this->config = $config;
 		$this->clientService = $clientService;
 		$this->logger = $logger;
@@ -92,7 +92,7 @@ class SpicaMailService extends SpicaBaseService {
 
 	public function setUnreadCounter(int $counter): void {
 		$this->cache->set($this->userId, $counter,
-			$this->config->getAppValue(Application::APP_ID, Application::APP_CONFIG_CACHE_TTL_MAIL, Application::APP_CONFIG_CACHE_TTL_MAIL_DEFAULT)
+			(int)$this->config->getAppValue(Application::APP_ID, Application::APP_CONFIG_CACHE_TTL_MAIL, (string)Application::APP_CONFIG_CACHE_TTL_MAIL_DEFAULT)
 		);
 		$this->config->setUserValue($this->userId, Application::APP_ID, Application::USER_CONFIG_KEY_UNREAD_COUNT, (string)$counter);
 	}

@@ -100,7 +100,7 @@ class SpicaAddressBook implements IAddressBook {
 			return [];
 		}
 		// form the result set
-		$result = array_merge(...array_map(static function ($contact) {
+		$result = array_merge(...array_values(array_map(static function ($contact) {
 			$emails = $contact['emails'] ?? [];
 			$template = ['UID' => ($contact['first'] ?? '') . ' ' . ($contact['last'] ?? ''),'FN' => ($contact['first'] ?? '') . ' ' . ($contact['last'] ?? '') ];
 			if (empty($emails)) {
@@ -109,10 +109,10 @@ class SpicaAddressBook implements IAddressBook {
 			return array_map(static function ($email) use ($template) {
 				return array_merge($template, ['EMAIL' => $email['email'], 'UID' => $email['email']]);
 			}, $emails);
-		}, $contacts));
+		}, $contacts)));
 
 		$this->cache->set($cacheKey, $result,
-			$this->config->getAppValue(Application::APP_ID, Application::APP_CONFIG_CACHE_TTL_CONTACTS, Application::APP_CONFIG_CACHE_TTL_CONTACTS_DEFAULT)
+			(int)$this->config->getAppValue(Application::APP_ID, Application::APP_CONFIG_CACHE_TTL_CONTACTS, (string)Application::APP_CONFIG_CACHE_TTL_CONTACTS_DEFAULT)
 		);
 
 		return $result;

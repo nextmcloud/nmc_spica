@@ -26,11 +26,14 @@ namespace OCA\NmcSpica\Service;
 use OCA\NmcSpica\AppInfo\Application;
 use OCA\NmcSpica\ServiceException;
 use OCP\IConfig;
+use Psr\Log\LoggerInterface;
 
 class SpicaBaseService {
 
 	/** @var IConfig */
 	private $config;
+	/** @var LoggerInterface */
+	private $logger;
 	/** @var TokenService */
 	private $tokenService;
 	/** @var string|null */
@@ -40,8 +43,9 @@ class SpicaBaseService {
 	private $spicaAppId;
 	private $spicaAppSecret;
 
-	public function __construct(IConfig $config, TokenService $tokenService, $userId) {
+	public function __construct(IConfig $config, LoggerInterface $logger, TokenService $tokenService, ?string $userId) {
 		$this->config = $config;
+		$this->logger = $logger;
 		$this->tokenService = $tokenService;
 		$this->userId = $userId;
 		if ($userId === null) {
