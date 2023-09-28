@@ -34,7 +34,7 @@
 		label.textContent = t('core', 'Email');
 
 		var parentMailWrapper = document.createElement('div');
-		parentMailWrapper.id = "contactsmenu";
+		parentMailWrapper.id = "nmc_spica";
 		var mailWrapper = document.createElement('a');
 		mailWrapper.href = OCP.InitialState.loadState('nmc_spica', 'mail-url');
 		mailWrapper.target = "_blank";
@@ -47,5 +47,5 @@
 		return parentMailWrapper;
 	}
 
-	document.querySelector('.header-right')?.insertBefore(renderHeader(), document.getElementById('settings'));
+	document.querySelector('.header-right')?.insertBefore(renderHeader(), document.getElementById('user-menu'));
 })()
