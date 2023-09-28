@@ -1,11 +1,38 @@
-.nmc_spica_wrapper {
+#nmc_spica {
 	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.nmc_spica_wrapper {
 	align-items: center;
 	color: var(--color-primary-text);
+	display: flex;
+	height: var(--header-height);
+	padding-right: 0.75rem;
+}
+
+.nmc_spica_wrapper:hover {
+	filter: brightness(0) saturate(100%) invert(13%) sepia(85%) saturate(6096%) hue-rotate(321deg) brightness(75%) contrast(104%) !important;
+}
+
+.nmc_spica_wrapper:hover::before {
+    background-color: var(--color-primary);
+    border-bottom-color: var(--color-main-background);
+    bottom: 0;
+    content: " ";
+    display: block;
+    height: 2px;
+    left: 50%;
+    pointer-events: none;
+    position: absolute;
+    transform: translateX(-50%);
+    transition: all 0.1s ease-in-out;
+    width: 100%;
 }
 
 .nmc_spica_wrapper .icon-mail {
-	padding: 12px;
+	padding: 1rem;
 }
 
 .nmc_spica_wrapper .unread-badge {
@@ -28,39 +55,8 @@
 	font-weight: 700;
 }
 
-#contactsmenu {
-	margin-right: 1.5rem;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-}
-
-.nmc_spica_wrapper .icon-mail {
-	background-image: var(--icon-mail-custom);
-}
-
 .nmc_spica_wrapper div {
-	font-size: 0.75rem;
+	font-size: 1rem;
 	font-weight: bold;
 	color: var(--white-color);
-}
-
-.nmc_spica_wrapper .unread-badge + div {
-	display: none;
-}
-
-.header-right {
-	display: flex;
-}
-
-#contactsmenu.header-menu {
-	display: none;
-}
-
-div#contactsmenu {
-	order: 2;
-}
-
-div#user-menu {
-	order: 3;
 }
