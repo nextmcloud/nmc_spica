@@ -13,7 +13,7 @@
 }
 
 .nmc_spica_wrapper div {
-	font-size: 1rem;
+	font-size: 12px;
 	font-weight: bold;
 	color: var(--white-color);
 }
@@ -65,4 +65,11 @@
 .nmc_spica_wrapper:hover .has-unread {
     background-color: var(--color-primary);
 	color: var(--color-primary-element-text-dark);
+}
+
+@media screen and (max-width: 1024px) {
+
+	.nmc_spica_wrapper div:last-child {
+		display: none;
+	}
 }
