@@ -16,6 +16,7 @@
 	font-size: 12px;
 	font-weight: bold;
 	color: var(--white-color);
+	margin-top: 1px;
 }
 
 .nmc_spica_wrapper:hover div {
