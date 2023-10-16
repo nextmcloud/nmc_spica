@@ -12,17 +12,23 @@
 	padding-right: 0.75rem;
 }
 
-.nmc_spica_wrapper:hover {
+.nmc_spica_wrapper div {
+	font-size: 1rem;
+	font-weight: bold;
+	color: var(--white-color);
+}
+
+.nmc_spica_wrapper:hover div {
 	filter: brightness(0) saturate(100%) invert(13%) sepia(85%) saturate(6096%) hue-rotate(321deg) brightness(75%) contrast(104%) !important;
 }
 
 .nmc_spica_wrapper:hover::before {
     background-color: var(--color-primary);
     border-bottom-color: var(--color-main-background);
-    bottom: 0;
+    bottom: 8px;
     content: " ";
     display: block;
-    height: 2px;
+    height: 4px;
     left: 50%;
     pointer-events: none;
     position: absolute;
@@ -40,23 +46,23 @@
 }
 
 .nmc_spica_wrapper .has-unread {
-	border-radius: 20px;
 	background-color: var(--color-background-plain);
+	border-radius: 2rem;
+	color: var(--color-primary-text);
 	display: block;
-	min-width: 0.625rem;
-	height: 0.875rem;
-	font-size: 0.688rem;
-	text-align: center;
-	padding: 0.063rem 0.25rem 0 0.25rem ;
-	line-height: 110%;
-	margin-top: -20px;
-	margin-left: -18px;
-	color: var(--white-color);
+	font-size: 0.675rem;
 	font-weight: 700;
+	height: 1rem;
+	line-height: 1rem;
+	margin-left: -18px;
+	margin-top: -20px;
+	min-width: calc(1rem - 4px);
+	padding: 0 2px;
+	text-align: center;
+	z-index: 1;
 }
 
-.nmc_spica_wrapper div {
-	font-size: 1rem;
-	font-weight: bold;
-	color: var(--white-color);
+.nmc_spica_wrapper:hover .has-unread {
+    background-color: var(--color-primary);
+	color: var(--color-primary-element-text-dark);
 }
