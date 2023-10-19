@@ -16,6 +16,7 @@ use OCP\AppFramework\Http\TemplateResponse;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
 
+/** @template-implements IEventListener<Event|BeforeTemplateRenderedEvent> */
 class BeforeTemplateRenderedListener implements IEventListener {
 
 	public function handle(Event $event): void {
