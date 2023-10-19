@@ -15,21 +15,10 @@ use OCP\AppFramework\Http\Events\BeforeTemplateRenderedEvent;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\EventDispatcher\Event;
 use OCP\EventDispatcher\IEventListener;
-use OCP\IUserSession;
 
 class BeforeTemplateRenderedListener implements IEventListener {
-	private IUserSession $userSession;
-
-	public function __construct(IUserSession $userSession) {
-		$this->userSession = $userSession;
-	}
 
 	public function handle(Event $event): void {
-		$user = $this->userSession->getUser();
-
-		if ($user === null) {
-			return;
-		}
 
 		if (!($event instanceof BeforeTemplateRenderedEvent)) {
 			return;
