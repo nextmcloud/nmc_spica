@@ -47,9 +47,9 @@
 }
 
 .nmc_spica_wrapper .has-unread {
-	background-color: var(--color-background-plain);
+    background-color: var(--color-primary);
 	border-radius: 2rem;
-	color: var(--color-primary-text);
+	color: var(--color-primary-element-text-dark);
 	display: block;
 	font-size: 0.675rem;
 	font-weight: 700;
@@ -61,11 +61,6 @@
 	padding: 0 2px;
 	text-align: center;
 	z-index: 1;
-}
-
-.nmc_spica_wrapper:hover .has-unread {
-    background-color: var(--color-primary);
-	color: var(--color-primary-element-text-dark);
 }
 
 @media screen and (max-width: 1024px) {
