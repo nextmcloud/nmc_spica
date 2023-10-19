@@ -47,7 +47,7 @@
 }
 
 .nmc_spica_wrapper .has-unread {
-    background-color: var(--color-primary);
+	background-color: var(--color-primary);
 	border-radius: 2rem;
 	color: var(--color-primary-element-text-dark);
 	display: block;
