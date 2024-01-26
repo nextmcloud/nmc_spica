@@ -27,7 +27,6 @@ namespace OCA\NmcSpica\AppInfo;
 
 use OCA\NmcSpica\Listener\BeforeTemplateRenderedListener;
 use OCA\NmcSpica\Listener\TokenObtainedEventListener;
-use OCA\NmcSpica\Service\SpicaMailService;
 use OCA\NmcSpica\Service\TokenService;
 use OCA\NmcSpica\SpicaAddressBook;
 use OCA\UserOIDC\Event\TokenObtainedEvent;
@@ -36,9 +35,7 @@ use OCP\AppFramework\Bootstrap\IBootContext;
 use OCP\AppFramework\Bootstrap\IBootstrap;
 use OCP\AppFramework\Bootstrap\IRegistrationContext;
 use OCP\AppFramework\Http\Events\BeforeTemplateRenderedEvent;
-use OCP\AppFramework\Services\IInitialState;
 use OCP\Contacts\IManager;
-use OCP\IConfig;
 
 class Application extends App implements IBootstrap {
 	public const APP_ID = 'nmc_spica';
@@ -66,12 +63,9 @@ class Application extends App implements IBootstrap {
 
 	public function boot(IBootContext $context): void {
 		$context->injectFn(function (
-			IInitialState $initialState,
 			TokenService $tokenService,
 			IManager $contactsManager,
 			SpicaAddressBook $spicaAddressBook,
-			SpicaMailService $unreadService,
-			IConfig $config,
 			$userId
 		) {
 
@@ -89,14 +83,6 @@ class Application extends App implements IBootstrap {
 			if ($token !== null && $token->isExpired()) {
 				$tokenService->reauthenticate();
 			}
-
-			$initialState->provideLazyInitialState('unread-counter', function () use ($unreadService) {
-				return $unreadService->getUnreadCounter();
-			});
-
-			$initialState->provideLazyInitialState('mail-url', function () use ($config) {
-				return $config->getAppValue(self::APP_ID, self::APP_CONFIG_WEBMAIL_URL, '');
-			});
 		});
 	}
 }
