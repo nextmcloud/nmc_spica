@@ -115,7 +115,7 @@ class TokenService {
 						'client_id' => $oidcProvider->getClientId(),
 						'client_secret' => $oidcProvider->getClientSecret(),
 						'grant_type' => 'refresh_token',
-						'refresh_token' => $token->getRefreshToken(),
+						'refresh_token' => $token->getRefreshToken() ?? '',
 						'scope' => 'spica',
 					],
 				]
