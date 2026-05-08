@@ -30,24 +30,28 @@ use ReturnTypeWillChange;
 
 class Token implements JsonSerializable {
 
-	/** @var string */
-	private $idToken;
-	/** @var string */
-	private $accessToken;
-	/** @var int */
-	private $expiresIn;
 	/** @var string|null */
-	private $refreshToken;
+	private ?string $idToken;
+
+	/** @var string */
+	private string $accessToken;
 
 	/** @var int */
-	private $createdAt;
+	private int $expiresIn;
+
+	/** @var string|null */
+	private ?string $refreshToken;
+
+	/** @var int */
+	private int $createdAt;
+
 	/** @var int|null */
-	private $providerId;
+	private ?int $providerId;
 
 	public function __construct(array $tokenData) {
-		$this->idToken = $tokenData['id_token'];
+		$this->idToken = $tokenData['id_token'] ?? null;
 		$this->accessToken = $tokenData['access_token'];
-		$this->expiresIn = $tokenData['expires_in'];
+		$this->expiresIn = (int) $tokenData['expires_in'];
 		$this->refreshToken = $tokenData['refresh_token'] ?? null;
 		$this->createdAt = $tokenData['created_at'] ?? time();
 		$this->providerId = $tokenData['provider_id'] ?? null;
@@ -57,7 +61,7 @@ class Token implements JsonSerializable {
 		return $this->accessToken;
 	}
 
-	public function getIdToken(): string {
+	public function getIdToken(): ?string {
 		return $this->idToken;
 	}
 
@@ -78,10 +82,10 @@ class Token implements JsonSerializable {
 	}
 
 	public function isExpiring(): bool {
-		return time() > ($this->createdAt + (int)($this->expiresIn / 2));
+		return time() > ($this->createdAt + (int) ($this->expiresIn / 2));
 	}
 
-	public function getCreatedAt() {
+	public function getCreatedAt(): int {
 		return $this->createdAt;
 	}
 

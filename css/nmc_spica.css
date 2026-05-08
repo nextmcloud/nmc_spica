@@ -5,11 +5,13 @@
 }
 
 .nmc_spica_wrapper {
-	align-items: center;
-	display: flex;
+    align-items: center;
+    display: flex;
     gap: 0.75rem;
-	height: var(--header-height);
+    height: var(--header-height);
 	padding-right: 1.5rem;
+    min-width: var(--default-clickable-area);
+    justify-content: center;
 }
 
 .nmc_spica_wrapper div {
@@ -48,13 +50,13 @@
 .nmc_spica_wrapper .has-unread {
 	background-color: var(--color-primary);
 	border-radius: 2rem;
-	color: var(--color-primary-element-text-dark);
+	color: var(--nmc-color-text-and-icon-white);
 	display: block;
 	font-size: 0.675rem;
 	font-weight: 700;
 	height: 1rem;
+	left: 1rem;
 	line-height: 1rem;
-    left: 1rem;
     margin-top: -1rem;
 	min-width: calc(1rem - 4px);
 	padding: 0 2px;
@@ -64,6 +66,14 @@
 }
 
 @media screen and (max-width: 1024px) {
+
+	.nmc_spica_wrapper {
+        padding-right: 0;
+	}
+
+	.nmc_spica_wrapper .has-unread {
+		left: 1.75rem;
+	}
 
 	.nmc_spica_wrapper div:last-child {
 		display: none;
