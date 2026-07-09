@@ -33,12 +33,24 @@
 		var label = document.createElement('div');
 		label.textContent = t('core', 'Email');
 
+		icon.setAttribute('aria-hidden', 'true');
+		badge.setAttribute('aria-hidden', 'true');
+		label.setAttribute('aria-hidden', 'true');
+
 		var parentMailWrapper = document.createElement('div');
 		parentMailWrapper.id = "nmc_spica";
 		var mailWrapper = document.createElement('a');
 		mailWrapper.href = OCP.InitialState.loadState('nmc_spica', 'mail-url');
 		mailWrapper.target = "_blank";
 		mailWrapper.classList = 'nmc_spica_wrapper';
+
+		var ariaLabel = t('core', 'Email');
+		if (hasUnread) {
+			ariaLabel += ', ' + count + ' unread';
+		}
+		ariaLabel += ', opens in new tab';
+		mailWrapper.setAttribute('aria-label', ariaLabel);
+
 		mailWrapper.appendChild(icon);
 		mailWrapper.appendChild(badge);
 		mailWrapper.appendChild(label);
